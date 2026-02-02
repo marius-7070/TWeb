@@ -1,0 +1,153 @@
+﻿<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyNet.MD | Despre & Contact</title>
+  <meta name="description" content="Despre SkyNet.MD, echipa si contact pentru oferte, service si suport in Republica Moldova." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Sari la continut</a>
+
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="SkyNet.MD">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" aria-hidden="true">
+            <path d="M16 3l12 6-12 6L4 9l12-6zm0 13l10 5-10 5-10-5 10-5z" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="brand__name">SkyNet.MD</span>
+      </a>
+      <nav class="nav" data-nav>
+        <a href="index.html">Acasa</a>
+        <a href="catalog.html">Catalog</a>
+        <a href="product.html">Produs</a>
+        <a href="contact.html" aria-current="page">Despre & Contact</a>
+      </nav>
+      <div class="header__actions">
+        <button class="btn btn--ghost" type="button">Cere oferta</button>
+        <button class="cart-toggle" type="button" data-cart-toggle aria-expanded="false" aria-controls="cartDrawer">
+          <span>Cos</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Deschide meniul">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section">
+      <div class="container about">
+        <div>
+          <p class="eyebrow">Despre SkyNet.MD</p>
+          <h1>Tehnologie premium pentru zboruri sigure si rezultate clare.</h1>
+          <p>Suntem o echipa de ingineri si creatori din Republica Moldova care proiecteaza drone de inalta performanta pentru filmare, inspectii si agricultura. Livram suport local, training si service rapid.</p>
+          <div class="grid grid--3">
+            <div class="info-card">
+              <h3>10+ ani</h3>
+              <p>experienta in proiecte aero.</p>
+            </div>
+            <div class="info-card">
+              <h3>48h</h3>
+              <p>timp mediu de diagnostic.</p>
+            </div>
+            <div class="info-card">
+              <h3>4.9/5</h3>
+              <p>satisfactie clienti.</p>
+            </div>
+          </div>
+        </div>
+        <div class="about__media">
+          <img src="https://picsum.photos/seed/aeronova-team/800/600" alt="Echipa SkyNet.MD" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container contact">
+        <div class="contact__form">
+          <h2>Contacteaza-ne</h2>
+          <p>Trimite un mesaj si iti raspundem in 24h.</p>
+          <div id="formAlert" class="form-alert" role="status" aria-live="polite"></div>
+          <form id="contactForm" novalidate>
+            <label for="name">Nume complet</label>
+            <input id="name" name="name" type="text" placeholder="Nume Prenume" required />
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="email@exemplu.ro" required />
+
+            <label for="company">Companie (optional)</label>
+            <input id="company" name="company" type="text" placeholder="Compania ta" />
+
+            <label for="message">Mesaj</label>
+            <textarea id="message" name="message" rows="4" placeholder="Spune-ne ce ai nevoie" required></textarea>
+
+            <label class="check"><input type="checkbox" id="terms" required /> Sunt de acord cu prelucrarea datelor.</label>
+
+            <button class="btn btn--primary" type="submit">Trimite mesaj</button>
+          </form>
+        </div>
+
+        <div class="contact__info">
+          <h3>Viziteaza-ne</h3>
+          <p>Bd. Stefan cel Mare 15, Chisinau</p>
+          <p>Program: Luni-Vineri 09:00-18:00</p>
+          <p>Telefon: +373 68 000 000</p>
+          <div class="map">
+            <img src="https://picsum.photos/seed/aeronova-map/600/420" alt="Harta locatie SkyNet.MD" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="brand brand--footer">
+          <span class="brand__name">SkyNet.MD</span>
+        </div>
+        <p>Drone premium pentru creatori si companii. Suport local, livrare rapida in Republica Moldova.</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>hello@skynet.md</p>
+        <p>+373 68 000 000</p>
+      </div>
+      <div>
+        <h4>Program</h4>
+        <p>Luni-Vineri: 09:00-18:00</p>
+        <p>Sambata: 10:00-14:00</p>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 SkyNet.MD. Toate drepturile rezervate.</div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Cos de cumparaturi">
+    <div class="cart-drawer__overlay" data-cart-overlay></div>
+    <div class="cart-drawer__panel">
+      <div class="cart-drawer__header">
+        <h3>Cosul tau</h3>
+        <button class="cart-drawer__close" type="button" data-cart-close aria-label="Inchide">×</button>
+      </div>
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-empty" data-cart-empty>Cosul este gol.</div>
+      <div class="cart-summary">
+        <div class="cart-summary__row">
+          <span>Total</span>
+          <strong data-cart-total>0 MDL</strong>
+        </div>
+        <button class="btn btn--primary" type="button">Finalizeaza comanda</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

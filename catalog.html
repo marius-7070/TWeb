@@ -1,0 +1,307 @@
+﻿<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyNet.MD | Catalog drone</title>
+  <meta name="description" content="Catalog complet de drone SkyNet.MD pentru incepatori, profesionisti si industrie din Republica Moldova." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Sari la continut</a>
+
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="SkyNet.MD">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" aria-hidden="true">
+            <path d="M16 3l12 6-12 6L4 9l12-6zm0 13l10 5-10 5-10-5 10-5z" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="brand__name">SkyNet.MD</span>
+      </a>
+      <nav class="nav" data-nav>
+        <a href="index.html">Acasa</a>
+        <a href="catalog.html" aria-current="page">Catalog</a>
+        <a href="product.html">Produs</a>
+        <a href="contact.html">Despre & Contact</a>
+      </nav>
+      <div class="header__actions">
+        <button class="btn btn--ghost" type="button">Cere oferta</button>
+        <button class="cart-toggle" type="button" data-cart-toggle aria-expanded="false" aria-controls="cartDrawer">
+          <span>Cos</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Deschide meniul">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="catalog" data-catalog>
+    <section class="section section--tight">
+      <div class="container">
+        <div class="section__head">
+          <h1>Catalog drone SkyNet.MD</h1>
+          <p>Filtreaza rapid dupa categorie, autonomie, camera sau buget.</p>
+          <p class="note">Modele reale de la DJI si Autel. Specificatiile si preturile sunt orientative pentru demo in MDL.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container catalog__layout">
+        <aside class="filters" aria-label="Filtre produse">
+          <h2>Filtre</h2>
+          <div class="filters__group">
+            <label for="priceMin">Pret minim (MDL)</label>
+            <input id="priceMin" type="number" inputmode="numeric" placeholder="0" min="0" />
+          </div>
+          <div class="filters__group">
+            <label for="priceMax">Pret maxim (MDL)</label>
+            <input id="priceMax" type="number" inputmode="numeric" placeholder="25000" min="0" />
+          </div>
+          <div class="filters__group">
+            <span>Categorie</span>
+            <label class="check"><input type="checkbox" name="category" value="Beginner" /> Beginner</label>
+            <label class="check"><input type="checkbox" name="category" value="Pro" /> Pro</label>
+            <label class="check"><input type="checkbox" name="category" value="Industrial" /> Industrial</label>
+          </div>
+          <div class="filters__group">
+            <label for="flightMin">Autonomie minima (minute)</label>
+            <input id="flightMin" type="number" inputmode="numeric" placeholder="25" min="0" />
+          </div>
+          <div class="filters__group">
+            <label for="camera">Camera</label>
+            <select id="camera">
+              <option value="any">Oricare</option>
+              <option value="4K">4K</option>
+              <option value="8K">8K</option>
+            </select>
+          </div>
+          <div class="filters__group">
+            <label for="weightMax">Greutate maxima (g)</label>
+            <input id="weightMax" type="number" inputmode="numeric" placeholder="2000" min="0" />
+          </div>
+          <button class="btn btn--ghost" type="button" id="resetFilters">Reseteaza filtre</button>
+        </aside>
+
+        <div class="catalog__content">
+          <div class="catalog__bar">
+            <div class="results" id="resultsCount" aria-live="polite">8 produse</div>
+            <div class="sort">
+              <label for="sort">Sortare</label>
+              <select id="sort">
+                <option value="popularity">Popularitate</option>
+                <option value="price-asc">Pret crescator</option>
+                <option value="price-desc">Pret descrescator</option>
+                <option value="rating">Rating</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid--3" data-product-grid>
+            <article class="product-card" data-name="DJI Mini 4 Pro" data-price="3899" data-rating="4.8" data-category="Beginner" data-camera="4K" data-flight="34" data-weight="249" data-popularity="95" data-image="https://se-cdn.djiits.com/stormsend/uploads/a04962b9405f36a2a0461142c149b909.png">
+              <div class="product-card__media">
+                <img src="https://se-cdn.djiits.com/stormsend/uploads/a04962b9405f36a2a0461142c149b909.png" alt="DJI Mini 4 Pro" loading="lazy" />
+                <span class="badge badge--beginner">Beginner</span>
+              </div>
+              <div class="product-card__body">
+                <h3>DJI Mini 4 Pro</h3>
+                <p class="product-card__meta">4K • 34 min • 249 g</p>
+                <div class="product-card__price">3 899 MDL</div>
+                <div class="rating" aria-label="Rating 4.8 din 5">4.8 ★</div>
+                <div class="product-card__actions">
+                  <button class="btn btn--primary js-add-cart" type="button">Adauga</button>
+                  <button class="btn btn--ghost js-quick-view" type="button">Quick view</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card" data-name="DJI Mini 3" data-price="2599" data-rating="4.6" data-category="Beginner" data-camera="4K" data-flight="38" data-weight="248" data-popularity="88" data-image="https://se-cdn.djiits.com/stormsend/uploads/7c103a9075a09de04d9bbc07a97a5f8e.png">
+              <div class="product-card__media">
+                <img src="https://se-cdn.djiits.com/stormsend/uploads/7c103a9075a09de04d9bbc07a97a5f8e.png" alt="DJI Mini 3" loading="lazy" />
+                <span class="badge badge--beginner">Beginner</span>
+              </div>
+              <div class="product-card__body">
+                <h3>DJI Mini 3</h3>
+                <p class="product-card__meta">4K • 38 min • 248 g</p>
+                <div class="product-card__price">2 599 MDL</div>
+                <div class="rating" aria-label="Rating 4.6 din 5">4.6 ★</div>
+                <div class="product-card__actions">
+                  <button class="btn btn--primary js-add-cart" type="button">Adauga</button>
+                  <button class="btn btn--ghost js-quick-view" type="button">Quick view</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card" data-name="DJI Air 3" data-price="5499" data-rating="4.8" data-category="Pro" data-camera="4K" data-flight="46" data-weight="720" data-popularity="97" data-image="https://se-cdn.djiits.com/stormsend/uploads/5d92dd82a10ca35cc78b9978aab5e567.png">
+              <div class="product-card__media">
+                <img src="https://se-cdn.djiits.com/stormsend/uploads/5d92dd82a10ca35cc78b9978aab5e567.png" alt="DJI Air 3" loading="lazy" />
+                <span class="badge badge--pro">Pro</span>
+              </div>
+              <div class="product-card__body">
+                <h3>DJI Air 3</h3>
+                <p class="product-card__meta">4K • 46 min • 720 g</p>
+                <div class="product-card__price">5 499 MDL</div>
+                <div class="rating" aria-label="Rating 4.8 din 5">4.8 ★</div>
+                <div class="product-card__actions">
+                  <button class="btn btn--primary js-add-cart" type="button">Adauga</button>
+                  <button class="btn btn--ghost js-quick-view" type="button">Quick view</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card" data-name="DJI Mavic 3 Pro" data-price="9999" data-rating="4.9" data-category="Pro" data-camera="4K" data-flight="43" data-weight="958" data-popularity="96" data-image="https://se-cdn.djiits.com/tpc/uploads/spu/cover/9b1bb4e6929cb9c5d0ea22bf33eedffd@small.png">
+              <div class="product-card__media">
+                <img src="https://se-cdn.djiits.com/tpc/uploads/spu/cover/9b1bb4e6929cb9c5d0ea22bf33eedffd@small.png" alt="DJI Mavic 3 Pro" loading="lazy" />
+                <span class="badge badge--pro">Pro</span>
+              </div>
+              <div class="product-card__body">
+                <h3>DJI Mavic 3 Pro</h3>
+                <p class="product-card__meta">4K • 43 min • 958 g</p>
+                <div class="product-card__price">9 999 MDL</div>
+                <div class="rating" aria-label="Rating 4.9 din 5">4.9 ★</div>
+                <div class="product-card__actions">
+                  <button class="btn btn--primary js-add-cart" type="button">Adauga</button>
+                  <button class="btn btn--ghost js-quick-view" type="button">Quick view</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card" data-name="DJI Mavic 3 Classic" data-price="8499" data-rating="4.7" data-category="Pro" data-camera="4K" data-flight="46" data-weight="895" data-popularity="90" data-image="https://se-cdn.djiits.com/tpc/uploads/spu/cover/19beaaa4cc0ca980146ab24d85b3a553@ultra.png">
+              <div class="product-card__media">
+                <img src="https://se-cdn.djiits.com/tpc/uploads/spu/cover/19beaaa4cc0ca980146ab24d85b3a553@ultra.png" alt="DJI Mavic 3 Classic" loading="lazy" />
+                <span class="badge badge--pro">Pro</span>
+              </div>
+              <div class="product-card__body">
+                <h3>DJI Mavic 3 Classic</h3>
+                <p class="product-card__meta">4K • 46 min • 895 g</p>
+                <div class="product-card__price">8 499 MDL</div>
+                <div class="rating" aria-label="Rating 4.7 din 5">4.7 ★</div>
+                <div class="product-card__actions">
+                  <button class="btn btn--primary js-add-cart" type="button">Adauga</button>
+                  <button class="btn btn--ghost js-quick-view" type="button">Quick view</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card" data-name="DJI Avata 2" data-price="5999" data-rating="4.7" data-category="Pro" data-camera="4K" data-flight="23" data-weight="377" data-popularity="89" data-image="https://se-cdn.djiits.com/tpc/uploads/spu/cover/1e1ced1c9fc557b237068f683a067feb@small.png">
+              <div class="product-card__media">
+                <img src="https://se-cdn.djiits.com/tpc/uploads/spu/cover/1e1ced1c9fc557b237068f683a067feb@small.png" alt="DJI Avata 2" loading="lazy" />
+                <span class="badge badge--pro">Pro</span>
+              </div>
+              <div class="product-card__body">
+                <h3>DJI Avata 2</h3>
+                <p class="product-card__meta">4K • 23 min • 377 g</p>
+                <div class="product-card__price">5 999 MDL</div>
+                <div class="rating" aria-label="Rating 4.7 din 5">4.7 ★</div>
+                <div class="product-card__actions">
+                  <button class="btn btn--primary js-add-cart" type="button">Adauga</button>
+                  <button class="btn btn--ghost js-quick-view" type="button">Quick view</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card" data-name="DJI Inspire 3" data-price="74999" data-rating="4.9" data-category="Industrial" data-camera="8K" data-flight="28" data-weight="3995" data-popularity="90" data-image="https://se-cdn.djiits.com/stormsend/uploads/926560b7780336ef9e0cf497502e14c3.png">
+              <div class="product-card__media">
+                <img src="https://se-cdn.djiits.com/stormsend/uploads/926560b7780336ef9e0cf497502e14c3.png" alt="DJI Inspire 3" loading="lazy" />
+                <span class="badge badge--industrial">Industrial</span>
+              </div>
+              <div class="product-card__body">
+                <h3>DJI Inspire 3</h3>
+                <p class="product-card__meta">8K • 28 min • 3995 g</p>
+                <div class="product-card__price">74 999 MDL</div>
+                <div class="rating" aria-label="Rating 4.9 din 5">4.9 ★</div>
+                <div class="product-card__actions">
+                  <button class="btn btn--primary js-add-cart" type="button">Adauga</button>
+                  <button class="btn btn--ghost js-quick-view" type="button">Quick view</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card" data-name="Autel EVO II 8K" data-price="12999" data-rating="4.6" data-category="Industrial" data-camera="8K" data-flight="40" data-weight="1127" data-popularity="87" data-image="https://www.autelrobotics.com/wp-content/themes/autel/userfiles/images/2022/08/18/2022081811469144.webp">
+              <div class="product-card__media">
+                <img src="https://www.autelrobotics.com/wp-content/themes/autel/userfiles/images/2022/08/18/2022081811469144.webp" alt="Autel EVO II 8K" loading="lazy" />
+                <span class="badge badge--industrial">Industrial</span>
+              </div>
+              <div class="product-card__body">
+                <h3>Autel EVO II 8K</h3>
+                <p class="product-card__meta">8K • 40 min • 1127 g</p>
+                <div class="product-card__price">12 999 MDL</div>
+                <div class="rating" aria-label="Rating 4.6 din 5">4.6 ★</div>
+                <div class="product-card__actions">
+                  <button class="btn btn--primary js-add-cart" type="button">Adauga</button>
+                  <button class="btn btn--ghost js-quick-view" type="button">Quick view</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="empty-state" id="emptyState" hidden>
+            <h3>Niciun produs gasit</h3>
+            <p>Schimba filtrele sau reseteaza cautarea.</p>
+            <button class="btn btn--ghost" type="button" id="resetFiltersEmpty">Reseteaza filtre</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="brand brand--footer">
+          <span class="brand__name">SkyNet.MD</span>
+        </div>
+        <p>Drone premium pentru creatori si companii. Suport local, livrare rapida in Republica Moldova.</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>hello@skynet.md</p>
+        <p>+373 68 000 000</p>
+      </div>
+      <div>
+        <h4>Program</h4>
+        <p>Luni-Vineri: 09:00-18:00</p>
+        <p>Sambata: 10:00-14:00</p>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 SkyNet.MD. Toate drepturile rezervate.</div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="modal" id="quickViewModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+    <div class="modal__overlay" data-modal-overlay></div>
+    <div class="modal__content" role="document">
+      <button class="modal__close" type="button" data-modal-close aria-label="Inchide">×</button>
+      <div class="modal__body">
+        <img id="modalImage" src="" alt="" />
+        <div>
+          <h3 id="modalTitle">Titlu produs</h3>
+          <p id="modalMeta" class="u-text-muted"></p>
+          <div id="modalPrice" class="product-card__price"></div>
+          <div id="modalRating" class="rating"></div>
+          <button class="btn btn--primary js-add-cart" type="button">Adauga in cos</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Cos de cumparaturi">
+    <div class="cart-drawer__overlay" data-cart-overlay></div>
+    <div class="cart-drawer__panel">
+      <div class="cart-drawer__header">
+        <h3>Cosul tau</h3>
+        <button class="cart-drawer__close" type="button" data-cart-close aria-label="Inchide">×</button>
+      </div>
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-empty" data-cart-empty>Cosul este gol.</div>
+      <div class="cart-summary">
+        <div class="cart-summary__row">
+          <span>Total</span>
+          <strong data-cart-total>0 MDL</strong>
+        </div>
+        <button class="btn btn--primary" type="button">Finalizeaza comanda</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
