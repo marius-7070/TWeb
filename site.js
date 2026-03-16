@@ -939,17 +939,19 @@
     });
   }
 
-  initNav();
-  initCart();
-  initQuickView();
-  initTabs();
-  initAccordion();
-  initCatalogFilters();
-  initGallery();
-  initCompare();
-  initContactForm();
-  initRevealAnimations();
-  initStockSlider();
-  initGlobalEscapes();
-  syncBodyLock();
+  window.SkyNetSite = {
+    initNav: initNav,
+    initCart: initCart,
+    initQuickView: initQuickView,
+    initTabs: initTabs,
+    initAccordion: initAccordion,
+    initCatalogFilters: initCatalogFilters,
+    initGallery: initGallery,
+    initCompare: initCompare,
+    initContactForm: initContactForm,
+    initRevealAnimations: initRevealAnimations,
+    initStockSlider: initStockSlider,
+    initGlobalEscapes: initGlobalEscapes,
+    syncBodyLock: syncBodyLock,
+  };
 })();
