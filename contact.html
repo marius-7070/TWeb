@@ -74,6 +74,7 @@
         <div class="contact__form">
           <h2>Contacteaza-ne</h2>
           <p>Trimite un mesaj si iti raspundem in 24h.</p>
+          <p class="contact__caption">Formularul salveaza acum fiecare cerere intr-o baza SQLite locala si genereaza automat un cod de clearance.</p>
           <div id="formAlert" class="form-alert" role="status" aria-live="polite"></div>
           <form id="contactForm" novalidate>
             <label for="name">Nume complet</label>
@@ -84,6 +85,22 @@
 
             <label for="company">Companie (optional)</label>
             <input id="company" name="company" type="text" placeholder="Compania ta" />
+
+            <label for="missionType">Tip misiune</label>
+            <select id="missionType" name="missionType" required>
+              <option value="">Alege misiunea</option>
+              <option value="Filmare cinematica">Filmare cinematica</option>
+              <option value="Inspectie industriala">Inspectie industriala</option>
+              <option value="Agricultura de precizie">Agricultura de precizie</option>
+              <option value="Mapare 3D">Mapare 3D</option>
+            </select>
+
+            <label for="priority">Prioritate</label>
+            <select id="priority" name="priority">
+              <option value="Standard">Standard</option>
+              <option value="Rapid">Rapid</option>
+              <option value="Critic">Critic</option>
+            </select>
 
             <label for="message">Mesaj</label>
             <textarea id="message" name="message" rows="4" placeholder="Spune-ne ce ai nevoie" required></textarea>
@@ -102,6 +119,42 @@
           <div class="map">
             <img src="https://picsum.photos/seed/aeronova-map/600/420" alt="Harta locatie SkyNet.MD" loading="lazy" />
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container mission-control">
+        <div class="mission-control__intro">
+          <p class="eyebrow">SQLite Mission Control</p>
+          <h2>Hangarul SkyNet ruleaza acum cu memorie locala.</h2>
+          <p>Panoul de mai jos citeste direct din baza SQLite: vezi starea flotei, ultimele cereri si jurnalul seed-uit al hangarului.</p>
+        </div>
+
+        <div class="mission-stats" data-hangar-stats>
+          <div class="mission-empty">Incarcam telemetria hangarului...</div>
+        </div>
+
+        <div class="mission-control__grid">
+          <article class="mission-panel">
+            <div class="mission-panel__head">
+              <h3>Cereri recente</h3>
+              <span class="mission-tag">live</span>
+            </div>
+            <div class="mission-list" data-hangar-requests>
+              <div class="mission-empty">Prima cerere trimisa din formular va aparea aici.</div>
+            </div>
+          </article>
+
+          <article class="mission-panel">
+            <div class="mission-panel__head">
+              <h3>Jurnal hangar</h3>
+              <span class="mission-tag">seed</span>
+            </div>
+            <div class="mission-list" data-hangar-logs>
+              <div class="mission-empty">Incarcam jurnalul flotei.</div>
+            </div>
+          </article>
         </div>
       </div>
     </section>

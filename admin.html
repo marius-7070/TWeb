@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyNet.MD | Admin Hangar</title>
+  <meta name="description" content="Panou admin pentru cererile salvate in SQLite, flota si jurnalul SkyNet.MD." />
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="site.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Sari la continut</a>
+
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="SkyNet.MD">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" aria-hidden="true">
+            <path d="M16 3l12 6-12 6L4 9l12-6zm0 13l10 5-10 5-10-5 10-5z" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="brand__name">SkyNet.MD Admin</span>
+      </a>
+      <nav class="nav" data-nav>
+        <a href="index.html">Acasa</a>
+        <a href="catalog.html">Catalog</a>
+        <a href="contact.html">Despre & Contact</a>
+        <a href="admin.html" aria-current="page">Admin</a>
+      </nav>
+      <div class="header__actions">
+        <a class="btn btn--ghost" href="contact.html">Formular client</a>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Deschide meniul">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="admin-hero">
+      <div class="container admin-hero__grid">
+        <div class="admin-hero__content">
+          <p class="eyebrow">SQLite Control Room</p>
+          <h1>Feedback, cereri si stare de flota intr-un singur panou.</h1>
+          <p class="admin-hero__lead">Pagina citeste direct din `mission_requests`, `drone_fleet` si `hangar_logs`. Este panoul rapid pentru a confirma ca baza de date functioneaza.</p>
+          <p class="admin-hero__note">Deschide pagina prin <strong>http://localhost:3000/admin.html</strong>, nu direct din fisier.</p>
+          <div class="admin-actions">
+            <button class="btn btn--primary" type="button" data-admin-refresh>Reincarca datele</button>
+            <a class="btn btn--ghost" href="contact.html#contactForm">Trimite un test</a>
+          </div>
+          <div class="admin-meta">
+            <span class="admin-meta__chip">Baza: <strong data-admin-db>data/skynet-hangar.sqlite</strong></span>
+            <span class="admin-meta__chip">Status: <strong data-admin-status>Conectare...</strong></span>
+          </div>
+        </div>
+        <aside class="admin-hero__panel">
+          <h2>Ce vezi aici</h2>
+          <ul class="hero-list">
+            <li>toate cererile trimise din formularul de contact</li>
+            <li>starea flotei seed-uite in SQLite</li>
+            <li>ultimele loguri din hangar</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="stats-grid" data-admin-stats>
+          <div class="panel-empty">Incarcam statisticile hangarului...</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container admin-grid">
+        <article class="admin-panel admin-panel--wide reveal-item">
+          <div class="admin-panel__head">
+            <div>
+              <p class="eyebrow">Feedback</p>
+              <h2>Mesaje salvate in `mission_requests`</h2>
+            </div>
+            <span class="admin-counter" data-admin-request-count>0 inregistrari</span>
+          </div>
+          <div class="table-shell">
+            <table class="feedback-table">
+              <thead>
+                <tr>
+                  <th>Cod</th>
+                  <th>Client</th>
+                  <th>Misiune</th>
+                  <th>Feedback</th>
+                  <th>Status</th>
+                  <th>Creat</th>
+                </tr>
+              </thead>
+              <tbody data-admin-requests>
+                <tr>
+                  <td colspan="6">
+                    <div class="panel-empty">Asteptam date din SQLite...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="admin-panel reveal-item">
+          <div class="admin-panel__head">
+            <div>
+              <p class="eyebrow">Flota</p>
+              <h2>Unitati active</h2>
+            </div>
+          </div>
+          <div class="fleet-list" data-admin-fleet>
+            <div class="panel-empty">Incarcam flota...</div>
+          </div>
+        </article>
+
+        <article class="admin-panel reveal-item">
+          <div class="admin-panel__head">
+            <div>
+              <p class="eyebrow">Jurnal</p>
+              <h2>Ultimele loguri</h2>
+            </div>
+          </div>
+          <div class="log-list" data-admin-logs>
+            <div class="panel-empty">Incarcam logurile hangarului...</div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="site.js" defer></script>
+  <script src="admin.js" defer></script>
+</body>
+</html>

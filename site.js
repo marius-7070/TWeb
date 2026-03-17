@@ -39,6 +39,28 @@
     }
   }
 
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function formatDateTime(value) {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value || "acum";
+    }
+
+    return new Intl.DateTimeFormat("ro-RO", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(date);
+  }
+
   function slugify(value) {
     return String(value || "")
       .toLowerCase()
@@ -762,13 +784,17 @@
 
       const name = ($("#name", form) && $("#name", form).value.trim()) || "";
       const email = ($("#email", form) && $("#email", form).value.trim()) || "";
+      const company = ($("#company", form) && $("#company", form).value.trim()) || "";
+      const missionType = ($("#missionType", form) && $("#missionType", form).value.trim()) || "";
+      const priority = ($("#priority", form) && $("#priority", form).value.trim()) || "Standard";
       const message = ($("#message", form) && $("#message", form).value.trim()) || "";
       const terms = $("#terms", form);
+      const submitButton = $('button[type="submit"]', form);
       const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
       alert.classList.remove("is-error", "is-success");
 
-      if (!name || !email || !message || !terms || !terms.checked) {
+      if (!name || !email || !missionType || !message || !terms || !terms.checked) {
         alert.textContent = "Completeaza toate campurile obligatorii si confirma acordul.";
         alert.classList.add("is-error");
         return;
@@ -780,11 +806,200 @@
         return;
       }
 
-      form.reset();
-      alert.textContent = "Mesajul a fost trimis. Revenim in maximum 24h.";
-      alert.classList.add("is-success");
-      showToast("Mesajul tau a fost trimis.");
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Trimitem...";
+      }
+
+      window
+        .fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            company: company,
+            missionType: missionType,
+            priority: priority,
+            message: message,
+          }),
+        })
+        .then(function (response) {
+          return response.json().then(function (payload) {
+            if (!response.ok) {
+              throw new Error(payload.error || "Eroare la salvare.");
+            }
+
+            return payload;
+          });
+        })
+        .then(function (payload) {
+          form.reset();
+          alert.textContent = payload.message + " Cod de clearance: " + payload.clearanceCode + ".";
+          alert.classList.add("is-success");
+          showToast("Cererea " + payload.clearanceCode + " a fost salvata.");
+          initHangarIntel();
+        })
+        .catch(function (error) {
+          alert.textContent =
+            error.message ||
+            "Nu am putut salva in baza SQLite. Porneste serverul local cu node server.js.";
+          alert.classList.add("is-error");
+        })
+        .finally(function () {
+          if (!submitButton) {
+            return;
+          }
+
+          submitButton.disabled = false;
+          submitButton.textContent = "Trimite mesaj";
+        });
     });
+  }
+
+  function renderHangarStats(container, stats) {
+    const cards = [
+      {
+        hint: (stats.readyToLaunch || 0) + " gata de lansare",
+        label: "Flota inregistrata",
+        value: stats.fleetTotal || 0,
+      },
+      {
+        hint: (stats.rapidCount || 0) + " cu prioritate rapida",
+        label: "Cereri in SQLite",
+        value: stats.requestCount || 0,
+      },
+      {
+        hint: "generat automat la ultima trimitere",
+        label: "Ultimul clearance",
+        value: stats.latestClearanceCode || "Standby",
+      },
+    ];
+
+    container.innerHTML = cards
+      .map(function (card) {
+        return (
+          '<div class="mission-stat">' +
+          '  <span class="mission-stat__label">' +
+          escapeHtml(card.label) +
+          "</span>" +
+          '  <strong class="mission-stat__value">' +
+          escapeHtml(card.value) +
+          "</strong>" +
+          '  <span class="mission-stat__hint">' +
+          escapeHtml(card.hint) +
+          "</span>" +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function renderRequestFeed(container, requests) {
+    if (!requests.length) {
+      container.innerHTML = '<div class="mission-empty">Prima cerere salvata din formular va aparea aici.</div>';
+      return;
+    }
+
+    container.innerHTML = requests
+      .map(function (item) {
+        return (
+          '<article class="mission-item">' +
+          '  <div class="mission-item__meta">' +
+          "    <span>" +
+          escapeHtml(item.clearanceCode) +
+          "</span>" +
+          "    <span>" +
+          escapeHtml(formatDateTime(item.createdAt)) +
+          "</span>" +
+          "  </div>" +
+          '  <h4 class="mission-item__title">' +
+          escapeHtml(item.missionType) +
+          " | " +
+          escapeHtml(item.priority) +
+          "</h4>" +
+          '  <p class="mission-item__summary">' +
+          escapeHtml(item.company) +
+          " | status: " +
+          escapeHtml(item.status) +
+          "</p>" +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function renderLogFeed(container, logs) {
+    if (!logs.length) {
+      container.innerHTML = '<div class="mission-empty">Jurnalul hangarului este momentan gol.</div>';
+      return;
+    }
+
+    container.innerHTML = logs
+      .map(function (item) {
+        return (
+          '<article class="mission-item">' +
+          '  <div class="mission-item__meta">' +
+          "    <span>" +
+          escapeHtml(item.callsign) +
+          " | " +
+          escapeHtml(item.missionCode) +
+          "</span>" +
+          "    <span>" +
+          escapeHtml(formatDateTime(item.loggedAt)) +
+          "</span>" +
+          "  </div>" +
+          '  <h4 class="mission-item__title">' +
+          escapeHtml(item.missionType) +
+          " | " +
+          escapeHtml(item.sector) +
+          "</h4>" +
+          '  <p class="mission-item__summary">' +
+          escapeHtml(item.summary) +
+          " | pilot: " +
+          escapeHtml(item.pilotName) +
+          " | status: " +
+          escapeHtml(item.status) +
+          "</p>" +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function initHangarIntel() {
+    const statsContainer = $("[data-hangar-stats]");
+    const requestsContainer = $("[data-hangar-requests]");
+    const logsContainer = $("[data-hangar-logs]");
+
+    if (!statsContainer || !requestsContainer || !logsContainer || !window.fetch) {
+      return;
+    }
+
+    window
+      .fetch("/api/hangar-intel")
+      .then(function (response) {
+        return response.json().then(function (payload) {
+          if (!response.ok) {
+            throw new Error(payload.error || "Nu am putut incarca hangarul.");
+          }
+
+          return payload;
+        });
+      })
+      .then(function (payload) {
+        renderHangarStats(statsContainer, payload.stats || {});
+        renderRequestFeed(requestsContainer, payload.recentRequests || []);
+        renderLogFeed(logsContainer, payload.recentLogs || []);
+      })
+      .catch(function () {
+        statsContainer.innerHTML =
+          '<div class="mission-empty">Panoul SQLite devine activ dupa pornirea serverului local cu <code>node server.js</code>.</div>';
+        requestsContainer.innerHTML = '<div class="mission-empty">Conexiunea la API nu este disponibila.</div>';
+        logsContainer.innerHTML = '<div class="mission-empty">Jurnalul local nu a putut fi incarcat.</div>';
+      });
   }
 
   function initRevealAnimations() {
@@ -949,6 +1164,7 @@
     initGallery: initGallery,
     initCompare: initCompare,
     initContactForm: initContactForm,
+    initHangarIntel: initHangarIntel,
     initRevealAnimations: initRevealAnimations,
     initStockSlider: initStockSlider,
     initGlobalEscapes: initGlobalEscapes,

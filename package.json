@@ -1,0 +1,8 @@
+{
+  "name": "skynet-hangar",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test --test-isolation=none server.test.js"
+  }
+}
