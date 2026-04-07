@@ -10,6 +10,53 @@ body.ui-locked {
   gap: 8px;
 }
 
+.auth-shell {
+  display: inline-flex;
+  align-items: center;
+}
+
+.auth-link {
+  white-space: nowrap;
+}
+
+.auth-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 6px 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 10px 22px rgba(12, 34, 56, 0.08);
+}
+
+.auth-user__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.auth-user__eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5f7991;
+  font-weight: 800;
+}
+
+.auth-user__name {
+  max-width: 152px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.auth-user__logout {
+  padding: 9px 12px;
+}
+
 .btn,
 .cart-toggle,
 .nav a,
@@ -462,6 +509,11 @@ body.ui-locked {
   .header__actions {
     gap: 10px;
     flex-wrap: wrap;
+  }
+
+  .auth-user {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .cart-item {

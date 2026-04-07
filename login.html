@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyNet.MD | Autentificare</title>
+  <meta name="description" content="Autentificare in contul SkyNet.MD pentru acces rapid la cereri, comenzi si experienta personalizata." />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="site.css" />
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body data-auth-mode="login">
+  <a class="skip-link" href="#main">Sari la continut</a>
+
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="SkyNet.MD">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" aria-hidden="true">
+            <path d="M16 3l12 6-12 6L4 9l12-6zm0 13l10 5-10 5-10-5 10-5z" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="brand__name">SkyNet.MD</span>
+      </a>
+      <nav class="nav" data-nav>
+        <a href="index.html">Acasa</a>
+        <a href="catalog.html">Catalog</a>
+        <a href="product.html">Produs</a>
+        <a href="contact.html">Despre & Contact</a>
+        <a href="services.html">Servicii</a>
+      </nav>
+      <div class="header__actions">
+        <a class="btn btn--ghost" href="contact.html#contactForm">Cere oferta</a>
+        <button class="cart-toggle" type="button" data-cart-toggle aria-expanded="false" aria-controls="cartDrawer">
+          <span>Cos</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Deschide meniul">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="auth-stage">
+      <div class="container auth-layout">
+        <aside class="auth-panel">
+          <div class="auth-panel__inner">
+            <span class="auth-kicker">SkyNet Access</span>
+            <div>
+              <p class="eyebrow">Autentificare rapida</p>
+              <h1>Intra in contul tau si continua de unde ai ramas.</h1>
+              <p class="auth-panel__lead">Experienta este conectata direct la baza SQLite deja folosita de proiect, fara pasi extra de configurare sau dependinte noi.</p>
+            </div>
+
+            <div class="auth-stat-grid">
+              <div class="auth-stat">
+                <strong>1 baza</strong>
+                <span>aceleasi date locale pentru site si autentificare</span>
+              </div>
+              <div class="auth-stat">
+                <strong>0 setup</strong>
+                <span>pornesti serverul si fluxul functioneaza imediat</span>
+              </div>
+            </div>
+
+            <ul class="auth-checklist">
+              <li>
+                <span class="auth-checklist__icon">01</span>
+                <div>
+                  <strong>Sesiune persistenta</strong>
+                  <p>Ramaneti conectat pe dispozitivul curent pentru acces rapid intre pagini.</p>
+                </div>
+              </li>
+              <li>
+                <span class="auth-checklist__icon">02</span>
+                <div>
+                  <strong>Flux unificat</strong>
+                  <p>Headerul site-ului recunoaste automat contul activ si iti permite deconectarea din orice pagina.</p>
+                </div>
+              </li>
+              <li>
+                <span class="auth-checklist__icon">03</span>
+                <div>
+                  <strong>Hashing local</strong>
+                  <p>Parolele sunt salvate hash-uit in SQLite, fara servicii externe sau chei suplimentare.</p>
+                </div>
+              </li>
+            </ul>
+
+            <ul class="auth-links">
+              <li><a href="register.html"><span>Nu ai cont inca?</span><span>Creeaza unul</span></a></li>
+              <li><a href="catalog.html"><span>Vrei doar sa explorezi?</span><span>Vezi catalogul</span></a></li>
+            </ul>
+          </div>
+        </aside>
+
+        <article class="auth-form-card">
+          <div class="auth-form-card__head">
+            <p class="eyebrow">Welcome back</p>
+            <h2>Autentificare</h2>
+            <p>Foloseste adresa de email si parola asociate contului tau SkyNet.MD.</p>
+          </div>
+
+          <div id="authAlert" class="form-alert" role="status" aria-live="polite"></div>
+
+          <form id="authForm" class="auth-form" novalidate>
+            <div class="auth-form__group">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="pilot@skynet.md" required />
+            </div>
+
+            <div class="auth-form__group">
+              <label for="password">Parola</label>
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Introdu parola" required />
+            </div>
+
+            <p class="auth-form__note">Sesiunea este memorata local pentru o experienta fluida pe toate paginile site-ului.</p>
+
+            <button class="btn btn--primary" type="submit">Intra in cont</button>
+          </form>
+
+          <section class="auth-status" id="authStatus" hidden>
+            <span class="auth-badge">Sesiune activa</span>
+            <h3 id="authStatusTitle">Esti deja autentificat.</h3>
+            <p id="authStatusMessage">Poti continua navigarea sau inchide sesiunea din acest ecran.</p>
+            <p id="authStatusMeta"></p>
+            <div class="auth-status__actions">
+              <a class="btn btn--primary" id="authContinueLink" href="index.html">Continua</a>
+              <button class="btn btn--ghost" id="authPageLogout" type="button">Deconectare</button>
+            </div>
+          </section>
+
+          <p class="auth-switch">Nu ai cont? <a href="register.html">Creeaza unul aici</a>.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="brand brand--footer">
+          <span class="brand__name">SkyNet.MD</span>
+        </div>
+        <p>Drone premium pentru creatori si companii. Suport local, livrare rapida in Republica Moldova.</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>hello@skynet.md</p>
+        <p>+373 68 000 000</p>
+      </div>
+      <div>
+        <h4>Program</h4>
+        <p>Luni-Vineri: 09:00-18:00</p>
+        <p>Sambata: 10:00-14:00</p>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 SkyNet.MD. Toate drepturile rezervate.</div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Cos de cumparaturi">
+    <div class="cart-drawer__overlay" data-cart-overlay></div>
+    <div class="cart-drawer__panel">
+      <div class="cart-drawer__header">
+        <h3>Cosul tau</h3>
+        <button class="cart-drawer__close" type="button" data-cart-close aria-label="Inchide">×</button>
+      </div>
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-empty" data-cart-empty>Cosul este gol.</div>
+      <div class="cart-summary">
+        <div class="cart-summary__row">
+          <span>Total</span>
+          <strong data-cart-total>0 MDL</strong>
+        </div>
+        <button class="btn btn--primary" type="button">Finalizeaza comanda</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="site.js" defer></script>
+  <script src="auth.js" defer></script>
+</body>
+</html>

@@ -6,6 +6,20 @@
     return (root || doc).querySelector(selector);
   }
 
+  function getAdminOverviewUrl() {
+    if (site && typeof site.resolveApiUrl === "function") {
+      return site.resolveApiUrl("/api/admin/overview");
+    }
+
+    return "http://localhost:3000/api/admin/overview";
+  }
+
+  function getAdminHeaders() {
+    return {
+      Authorization: "Basic " + window.btoa("admin:admin"),
+    };
+  }
+
   function escapeHtml(value) {
     return String(value || "")
       .replace(/&/g, "&amp;")
@@ -38,6 +52,42 @@
     return text.slice(0, maxLength - 3) + "...";
   }
 
+  function isIsoDateValue(value) {
+    return (
+      typeof value === "string" &&
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(value)
+    );
+  }
+
+  function formatTableCell(value) {
+    if (value === null || typeof value === "undefined") {
+      return '<span class="table-null">NULL</span>';
+    }
+
+    if (typeof value === "string" && !value.trim()) {
+      return '<span class="table-null">gol</span>';
+    }
+
+    if (isIsoDateValue(value)) {
+      return escapeHtml(formatDateTime(value));
+    }
+
+    const text = String(value);
+    const displayText = truncateText(text, 180);
+
+    if (displayText !== text) {
+      return (
+        '<span title="' +
+        escapeHtml(text) +
+        '">' +
+        escapeHtml(displayText) +
+        "</span>"
+      );
+    }
+
+    return escapeHtml(text);
+  }
+
   function renderStats(container, stats) {
     const cards = [
       {
@@ -59,6 +109,11 @@
         label: "Ultimul clearance",
         value: stats.latestClearanceCode || "Standby",
         hint: "generat de SQLite la ultima trimitere",
+      },
+      {
+        label: "Tabele SQLite",
+        value: stats.tableCount || 0,
+        hint: "catalog complet disponibil mai jos",
       },
     ];
 
@@ -211,16 +266,108 @@
       .join("");
   }
 
+  function renderDatabaseTables(container, tables) {
+    if (!tables.length) {
+      container.innerHTML =
+        '<div class="panel-empty">Nu am gasit tabele utilizator in baza de date.</div>';
+      return;
+    }
+
+    container.innerHTML = tables
+      .map(function (table) {
+        const columns = table.columns || [];
+        const rows = table.rows || [];
+
+        return (
+          '<article class="db-table-card">' +
+          '  <div class="db-table-card__head">' +
+          "    <div>" +
+          '      <p class="eyebrow">Tabel SQLite</p>' +
+          '      <h3 class="db-table-card__title">' +
+          escapeHtml(table.name) +
+          "</h3>" +
+          "    </div>" +
+          '    <span class="admin-counter">' +
+          escapeHtml(String(table.rowCount || 0)) +
+          " randuri</span>" +
+          "  </div>" +
+          '  <div class="db-table-card__columns">' +
+          columns
+            .map(function (column) {
+              const parts = [column.type || "TEXT"];
+
+              if (column.isPrimaryKey) {
+                parts.push("PK");
+              }
+
+              if (column.isRequired) {
+                parts.push("NOT NULL");
+              }
+
+              return (
+                '<span class="column-pill">' +
+                escapeHtml(column.name) +
+                '<small>' +
+                escapeHtml(parts.join(" | ")) +
+                "</small></span>"
+              );
+            })
+            .join("") +
+          "  </div>" +
+          '  <div class="table-shell">' +
+          '    <table class="db-table">' +
+          "      <thead><tr>" +
+          columns
+            .map(function (column) {
+              return "<th>" + escapeHtml(column.name) + "</th>";
+            })
+            .join("") +
+          "</tr></thead>" +
+          "      <tbody>" +
+          (rows.length
+            ? rows
+                .map(function (row) {
+                  return (
+                    "<tr>" +
+                    columns
+                      .map(function (column) {
+                        return "<td>" + formatTableCell(row[column.name]) + "</td>";
+                      })
+                      .join("") +
+                    "</tr>"
+                  );
+                })
+                .join("")
+            : '<tr><td colspan="' +
+              escapeHtml(String(columns.length || 1)) +
+              '"><div class="panel-empty">Tabelul nu are inca randuri.</div></td></tr>') +
+          "      </tbody>" +
+          "    </table>" +
+          "  </div>" +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
   function loadAdminOverview() {
     const statsContainer = $("[data-admin-stats]");
     const requestsContainer = $("[data-admin-requests]");
     const fleetContainer = $("[data-admin-fleet]");
     const logsContainer = $("[data-admin-logs]");
+    const databaseTablesContainer = $("[data-admin-database-tables]");
     const statusLabel = $("[data-admin-status]");
     const dbLabel = $("[data-admin-db]");
     const counter = $("[data-admin-request-count]");
+    const tableCounter = $("[data-admin-table-count]");
 
-    if (!statsContainer || !requestsContainer || !fleetContainer || !logsContainer) {
+    if (
+      !statsContainer ||
+      !requestsContainer ||
+      !fleetContainer ||
+      !logsContainer ||
+      !databaseTablesContainer
+    ) {
       return;
     }
 
@@ -229,7 +376,9 @@
     }
 
     window
-      .fetch("/api/admin/overview")
+      .fetch(getAdminOverviewUrl(), {
+        headers: getAdminHeaders(),
+      })
       .then(function (response) {
         return response.json().then(function (payload) {
           if (!response.ok) {
@@ -244,6 +393,7 @@
         renderRequests(requestsContainer, payload.requests || []);
         renderFleet(fleetContainer, payload.fleetUnits || []);
         renderLogs(logsContainer, payload.recentLogs || []);
+        renderDatabaseTables(databaseTablesContainer, payload.tables || []);
 
         if (dbLabel) {
           dbLabel.textContent = payload.databaseFile || "data/skynet-hangar.sqlite";
@@ -256,11 +406,15 @@
         if (counter) {
           counter.textContent = String((payload.requests || []).length) + " inregistrari";
         }
+
+        if (tableCounter) {
+          tableCounter.textContent = String((payload.tables || []).length) + " tabele";
+        }
       })
       .catch(function () {
         if (statsContainer) {
           statsContainer.innerHTML =
-            '<div class="panel-empty">API-ul admin nu raspunde. Porneste serverul local cu <code>node server.js</code>.</div>';
+            '<div class="panel-empty">API-ul admin nu raspunde. Porneste serverul local cu <code>node server.js</code> si deschide panoul prin <code>http://localhost:3000/admin.html</code>.</div>';
         }
 
         if (requestsContainer) {
@@ -276,8 +430,13 @@
           logsContainer.innerHTML = '<div class="panel-empty">Logurile nu au putut fi incarcate.</div>';
         }
 
+        if (databaseTablesContainer) {
+          databaseTablesContainer.innerHTML =
+            '<div class="panel-empty">Catalogul SQLite nu a putut fi incarcat.</div>';
+        }
+
         if (statusLabel) {
-          statusLabel.textContent = "Offline - porneste node server.js";
+          statusLabel.textContent = "Offline - foloseste http://localhost:3000/admin.html";
         }
       });
   }

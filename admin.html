@@ -42,7 +42,7 @@
         <div class="admin-hero__content">
           <p class="eyebrow">SQLite Control Room</p>
           <h1>Feedback, cereri si stare de flota intr-un singur panou.</h1>
-          <p class="admin-hero__lead">Pagina citeste direct din `mission_requests`, `drone_fleet` si `hangar_logs`. Este panoul rapid pentru a confirma ca baza de date functioneaza.</p>
+          <p class="admin-hero__lead">Pagina citeste direct din `mission_requests`, `drone_fleet` si `hangar_logs`, iar mai jos afiseaza si catalogul complet al tabelelor din SQLite. Este panoul rapid pentru a confirma ca baza de date functioneaza.</p>
           <p class="admin-hero__note">Deschide pagina prin <strong>http://localhost:3000/admin.html</strong>, nu direct din fisier.</p>
           <div class="admin-actions">
             <button class="btn btn--primary" type="button" data-admin-refresh>Reincarca datele</button>
@@ -59,6 +59,7 @@
             <li>toate cererile trimise din formularul de contact</li>
             <li>starea flotei seed-uite in SQLite</li>
             <li>ultimele loguri din hangar</li>
+            <li>toate tabelele din baza de date, cu coloane si randuri</li>
           </ul>
         </aside>
       </div>
@@ -126,6 +127,24 @@
           </div>
           <div class="log-list" data-admin-logs>
             <div class="panel-empty">Incarcam logurile hangarului...</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <article class="admin-panel reveal-item">
+          <div class="admin-panel__head">
+            <div>
+              <p class="eyebrow">Baza De Date</p>
+              <h2>Toate tabelele din `skynet-hangar.sqlite`</h2>
+            </div>
+            <span class="admin-counter" data-admin-table-count>0 tabele</span>
+          </div>
+          <p class="admin-panel__intro">Sectiunea de mai jos afiseaza structura reala a bazei SQLite, cu toate coloanele si toate randurile disponibile pentru fiecare tabel utilizator.</p>
+          <div class="database-tables" data-admin-database-tables>
+            <div class="panel-empty">Incarcam catalogul SQLite...</div>
           </div>
         </article>
       </div>

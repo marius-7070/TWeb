@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyNet.MD | Inregistrare</title>
+  <meta name="description" content="Creeaza un cont SkyNet.MD si incepe imediat fara setup suplimentar, folosind aceeasi baza SQLite din proiect." />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="site.css" />
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body data-auth-mode="register">
+  <a class="skip-link" href="#main">Sari la continut</a>
+
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="SkyNet.MD">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" aria-hidden="true">
+            <path d="M16 3l12 6-12 6L4 9l12-6zm0 13l10 5-10 5-10-5 10-5z" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="brand__name">SkyNet.MD</span>
+      </a>
+      <nav class="nav" data-nav>
+        <a href="index.html">Acasa</a>
+        <a href="catalog.html">Catalog</a>
+        <a href="product.html">Produs</a>
+        <a href="contact.html">Despre & Contact</a>
+        <a href="services.html">Servicii</a>
+      </nav>
+      <div class="header__actions">
+        <a class="btn btn--ghost" href="contact.html#contactForm">Cere oferta</a>
+        <button class="cart-toggle" type="button" data-cart-toggle aria-expanded="false" aria-controls="cartDrawer">
+          <span>Cos</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Deschide meniul">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="auth-stage">
+      <div class="container auth-layout">
+        <aside class="auth-panel">
+          <div class="auth-panel__inner">
+            <span class="auth-kicker">SQLite Native</span>
+            <div>
+              <p class="eyebrow">Cont nou</p>
+              <h1>Creeaza un cont in cateva secunde si incepe imediat.</h1>
+              <p class="auth-panel__lead">Inregistrarea foloseste direct baza locala a proiectului, asa ca nu ai nevoie de servicii externe, migrari manuale sau configurari suplimentare.</p>
+            </div>
+
+            <div class="auth-stat-grid">
+              <div class="auth-stat">
+                <strong>30 zile</strong>
+                <span>sesiune activa pe dispozitivul curent dupa creare</span>
+              </div>
+              <div class="auth-stat">
+                <strong>1 flux</strong>
+                <span>acelasi cont disponibil pe toate paginile publice ale site-ului</span>
+              </div>
+            </div>
+
+            <ul class="auth-checklist">
+              <li>
+                <span class="auth-checklist__icon">01</span>
+                <div>
+                  <strong>Creare instant</strong>
+                  <p>Dupa submit esti autentificat automat, fara un al doilea pas de login.</p>
+                </div>
+              </li>
+              <li>
+                <span class="auth-checklist__icon">02</span>
+                <div>
+                  <strong>Persistenta locala</strong>
+                  <p>Sesiunea si identitatea contului sunt sincronizate in site pentru o tranzitie naturala intre pagini.</p>
+                </div>
+              </li>
+              <li>
+                <span class="auth-checklist__icon">03</span>
+                <div>
+                  <strong>Backend existent</strong>
+                  <p>Totul ruleaza pe serverul Node si pe baza SQLite deja prezente in proiect.</p>
+                </div>
+              </li>
+            </ul>
+
+            <ul class="auth-links">
+              <li><a href="login.html"><span>Ai deja cont?</span><span>Autentifica-te</span></a></li>
+              <li><a href="services.html"><span>Vrei sa vezi serviciile?</span><span>Explora ofertele</span></a></li>
+            </ul>
+          </div>
+        </aside>
+
+        <article class="auth-form-card">
+          <div class="auth-form-card__head">
+            <p class="eyebrow">Create account</p>
+            <h2>Inregistrare</h2>
+            <p>Completeaza formularul de mai jos si contul tau SkyNet.MD va fi creat direct in baza de date existenta.</p>
+          </div>
+
+          <div id="authAlert" class="form-alert" role="status" aria-live="polite"></div>
+
+          <form id="authForm" class="auth-form" novalidate>
+            <div class="auth-form__group">
+              <label for="fullName">Nume complet</label>
+              <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="Nume Prenume" required />
+            </div>
+
+            <div class="auth-form__group">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="pilot@skynet.md" required />
+            </div>
+
+            <div class="auth-form__split">
+              <div class="auth-form__group">
+                <label for="password">Parola</label>
+                <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Minim 8 caractere" required />
+              </div>
+
+              <div class="auth-form__group">
+                <label for="confirmPassword">Confirma parola</label>
+                <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repeta parola" required />
+              </div>
+            </div>
+
+            <label class="check"><input type="checkbox" id="terms" required /> Sunt de acord cu stocarea datelor contului in baza locala a aplicatiei.</label>
+
+            <p class="auth-form__note">Fara configurare suplimentara: contul este creat in SQLite si sesiunea devine activa imediat dupa inregistrare.</p>
+
+            <button class="btn btn--primary" type="submit">Creeaza cont</button>
+          </form>
+
+          <section class="auth-status" id="authStatus" hidden>
+            <span class="auth-badge">Cont pregatit</span>
+            <h3 id="authStatusTitle">Contul tau este activ.</h3>
+            <p id="authStatusMessage">Poti continua navigarea sau inchide sesiunea din acest ecran.</p>
+            <p id="authStatusMeta"></p>
+            <div class="auth-status__actions">
+              <a class="btn btn--primary" id="authContinueLink" href="index.html">Continua</a>
+              <button class="btn btn--ghost" id="authPageLogout" type="button">Deconectare</button>
+            </div>
+          </section>
+
+          <p class="auth-switch">Ai deja cont? <a href="login.html">Autentifica-te aici</a>.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="brand brand--footer">
+          <span class="brand__name">SkyNet.MD</span>
+        </div>
+        <p>Drone premium pentru creatori si companii. Suport local, livrare rapida in Republica Moldova.</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>hello@skynet.md</p>
+        <p>+373 68 000 000</p>
+      </div>
+      <div>
+        <h4>Program</h4>
+        <p>Luni-Vineri: 09:00-18:00</p>
+        <p>Sambata: 10:00-14:00</p>
+      </div>
+    </div>
+    <div class="footer__bottom">© 2026 SkyNet.MD. Toate drepturile rezervate.</div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Cos de cumparaturi">
+    <div class="cart-drawer__overlay" data-cart-overlay></div>
+    <div class="cart-drawer__panel">
+      <div class="cart-drawer__header">
+        <h3>Cosul tau</h3>
+        <button class="cart-drawer__close" type="button" data-cart-close aria-label="Inchide">×</button>
+      </div>
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-empty" data-cart-empty>Cosul este gol.</div>
+      <div class="cart-summary">
+        <div class="cart-summary__row">
+          <span>Total</span>
+          <strong data-cart-total>0 MDL</strong>
+        </div>
+        <button class="btn btn--primary" type="button">Finalizeaza comanda</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="site.js" defer></script>
+  <script src="auth.js" defer></script>
+</body>
+</html>

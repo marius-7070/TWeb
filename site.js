@@ -1,16 +1,25 @@
 (function () {
   const CART_KEY = "skynet-cart-v1";
   const COMPARE_KEY = "skynet-compare-v1";
+  const AUTH_KEY = "skynet-auth-v1";
   const doc = document;
   const body = doc.body;
   const mediaMobile = window.matchMedia("(max-width: 780px)");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const savedCart = readStorage(CART_KEY, []);
   const savedCompare = readStorage(COMPARE_KEY, []);
+  const savedAuth = readStorage(AUTH_KEY, {});
+  const fallbackServerOrigin = "http://localhost:3000";
 
   const state = {
     cart: Array.isArray(savedCart) ? savedCart : [],
     compare: Array.isArray(savedCompare) ? savedCompare : [],
+    auth: {
+      sessionToken: typeof savedAuth.sessionToken === "string" ? savedAuth.sessionToken : "",
+      user: savedAuth.user && typeof savedAuth.user === "object" ? savedAuth.user : null,
+    },
+    authUiInitialized: false,
+    authSyncPromise: null,
     toastTimer: null,
   };
 
@@ -37,6 +46,102 @@
     } catch (error) {
       return;
     }
+  }
+
+  function stripTrailingSlash(value) {
+    return String(value || "").replace(/\/+$/, "");
+  }
+
+  function getConfiguredApiBase() {
+    const htmlBase = doc.documentElement.getAttribute("data-api-base") || "";
+    const bodyBase = body ? body.getAttribute("data-api-base") || "" : "";
+    const windowBase = typeof window.SKYNET_API_BASE === "string" ? window.SKYNET_API_BASE : "";
+
+    return stripTrailingSlash(windowBase || bodyBase || htmlBase);
+  }
+
+  function getApiBaseUrl() {
+    const configuredBase = getConfiguredApiBase();
+
+    if (configuredBase) {
+      return configuredBase;
+    }
+
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    const isHttpPage = protocol === "http:" || protocol === "https:";
+    const isLocalHost = hostname === "localhost" || hostname === "127.0.0.1";
+
+    if (isHttpPage && isLocalHost && port === "3000") {
+      return window.location.origin;
+    }
+
+    return fallbackServerOrigin;
+  }
+
+  function resolveApiUrl(resourcePath) {
+    const normalizedPath = String(resourcePath || "");
+
+    if (/^https?:\/\//i.test(normalizedPath)) {
+      return normalizedPath;
+    }
+
+    return getApiBaseUrl() + (normalizedPath.startsWith("/") ? normalizedPath : "/" + normalizedPath);
+  }
+
+  function persistAuthState() {
+    writeStorage(AUTH_KEY, {
+      sessionToken: state.auth.sessionToken || "",
+      user: state.auth.user || null,
+    });
+  }
+
+  function getAuthSessionToken() {
+    return state.auth.sessionToken || "";
+  }
+
+  function getAuthHeaders() {
+    const sessionToken = getAuthSessionToken();
+
+    if (!sessionToken) {
+      return {};
+    }
+
+    return {
+      Authorization: "Bearer " + sessionToken,
+    };
+  }
+
+  function getAuthState() {
+    return {
+      sessionToken: getAuthSessionToken(),
+      user: state.auth.user || null,
+    };
+  }
+
+  function emitAuthChange() {
+    window.dispatchEvent(
+      new CustomEvent("skynet-auth-change", {
+        detail: getAuthState(),
+      })
+    );
+  }
+
+  function setAuthSession(sessionToken, user) {
+    state.auth.sessionToken = String(sessionToken || "");
+    state.auth.user = user && typeof user === "object" ? user : null;
+    persistAuthState();
+    renderAuthUi();
+    emitAuthChange();
+  }
+
+  function clearAuthSession() {
+    state.auth.sessionToken = "";
+    state.auth.user = null;
+    persistAuthState();
+    renderAuthUi();
+    emitAuthChange();
   }
 
   function escapeHtml(value) {
@@ -150,6 +255,156 @@
     state.toastTimer = window.setTimeout(function () {
       toast.classList.remove("is-visible");
     }, 2600);
+  }
+
+  function ensureAuthShell() {
+    const actions = $(".header__actions");
+
+    if (!actions) {
+      return null;
+    }
+
+    let shell = $(".auth-shell", actions);
+
+    if (!shell) {
+      shell = doc.createElement("div");
+      shell.className = "auth-shell";
+
+      const cartToggle = $(".cart-toggle", actions);
+      const navToggle = $(".nav-toggle", actions);
+
+      if (cartToggle) {
+        actions.insertBefore(shell, cartToggle);
+      } else if (navToggle) {
+        actions.insertBefore(shell, navToggle);
+      } else {
+        actions.appendChild(shell);
+      }
+    }
+
+    return shell;
+  }
+
+  function renderAuthUi() {
+    const shell = ensureAuthShell();
+    const user = state.auth.user;
+
+    if (!shell) {
+      return;
+    }
+
+    if (user && user.name && user.email) {
+      shell.innerHTML =
+        '<div class="auth-user">' +
+        '  <div class="auth-user__copy">' +
+        '    <span class="auth-user__eyebrow">Cont activ</span>' +
+        '    <strong class="auth-user__name">' +
+        escapeHtml(user.name) +
+        "</strong>" +
+        "  </div>" +
+        '  <button class="btn btn--ghost auth-user__logout" type="button" data-auth-logout>Deconectare</button>' +
+        "</div>";
+      return;
+    }
+
+    shell.innerHTML = '<a class="btn btn--ghost auth-link" href="login.html">Autentificare</a>';
+  }
+
+  function syncAuthSession() {
+    if (!window.fetch || !getAuthSessionToken()) {
+      renderAuthUi();
+      return Promise.resolve({
+        authenticated: false,
+      });
+    }
+
+    if (state.authSyncPromise) {
+      return state.authSyncPromise;
+    }
+
+    state.authSyncPromise = window
+      .fetch(resolveApiUrl("/api/auth/session"), {
+        headers: getAuthHeaders(),
+      })
+      .then(function (response) {
+        return response.json().then(function (payload) {
+          if (!response.ok) {
+            throw new Error(payload.error || "Sesiunea nu a putut fi validata.");
+          }
+
+          return payload;
+        });
+      })
+      .then(function (payload) {
+        if (payload.authenticated && payload.user) {
+          setAuthSession(getAuthSessionToken(), payload.user);
+          return payload;
+        }
+
+        clearAuthSession();
+        return payload;
+      })
+      .catch(function () {
+        renderAuthUi();
+        return {
+          authenticated: Boolean(getAuthSessionToken() && state.auth.user),
+          user: state.auth.user || null,
+        };
+      })
+      .finally(function () {
+        state.authSyncPromise = null;
+      });
+
+    return state.authSyncPromise;
+  }
+
+  function logoutCurrentUser() {
+    const headers = getAuthHeaders();
+    const userName = state.auth.user && state.auth.user.name ? state.auth.user.name : "Contul";
+
+    clearAuthSession();
+
+    if (!window.fetch || !headers.Authorization) {
+      showToast(userName + " a fost deconectat.");
+      return Promise.resolve();
+    }
+
+    return window
+      .fetch(resolveApiUrl("/api/auth/logout"), {
+        method: "POST",
+        headers: headers,
+      })
+      .catch(function () {
+        return null;
+      })
+      .finally(function () {
+        showToast(userName + " a fost deconectat.");
+      });
+  }
+
+  function initAuthUi() {
+    if (state.authUiInitialized) {
+      renderAuthUi();
+      return;
+    }
+
+    state.authUiInitialized = true;
+    renderAuthUi();
+
+    doc.addEventListener("click", function (event) {
+      const logoutButton = event.target.closest("[data-auth-logout]");
+
+      if (!logoutButton) {
+        return;
+      }
+
+      logoutButton.disabled = true;
+      logoutCurrentUser();
+    });
+
+    if (getAuthSessionToken()) {
+      syncAuthSession();
+    }
   }
 
   function getCartCount() {
@@ -812,7 +1067,7 @@
       }
 
       window
-        .fetch("/api/contact", {
+        .fetch(resolveApiUrl("/api/contact"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -845,7 +1100,7 @@
         .catch(function (error) {
           alert.textContent =
             error.message ||
-            "Nu am putut salva in baza SQLite. Porneste serverul local cu node server.js.";
+            "Nu am putut salva in baza SQLite. Porneste serverul local cu node server.js si deschide pagina prin http://localhost:3000.";
           alert.classList.add("is-error");
         })
         .finally(function () {
@@ -969,17 +1224,26 @@
       .join("");
   }
 
-  function initHangarIntel() {
-    const statsContainer = $("[data-hangar-stats]");
-    const requestsContainer = $("[data-hangar-requests]");
-    const logsContainer = $("[data-hangar-logs]");
+  function loadHangarRequests(container) {
+    return window
+      .fetch(resolveApiUrl("/api/contact"))
+      .then(function (response) {
+        return response.json().then(function (payload) {
+          if (!response.ok) {
+            throw new Error(payload.error || "Nu am putut incarca cererile.");
+          }
 
-    if (!statsContainer || !requestsContainer || !logsContainer || !window.fetch) {
-      return;
-    }
+          return payload;
+        });
+      })
+      .then(function (payload) {
+        renderRequestFeed(container, payload.requests || []);
+      });
+  }
 
-    window
-      .fetch("/api/hangar-intel")
+  function loadHangarIntel(statsContainer, logsContainer) {
+    return window
+      .fetch(resolveApiUrl("/api/hangar-intel"))
       .then(function (response) {
         return response.json().then(function (payload) {
           if (!response.ok) {
@@ -991,15 +1255,29 @@
       })
       .then(function (payload) {
         renderHangarStats(statsContainer, payload.stats || {});
-        renderRequestFeed(requestsContainer, payload.recentRequests || []);
         renderLogFeed(logsContainer, payload.recentLogs || []);
-      })
+      });
+  }
+
+  function initHangarIntel() {
+    const statsContainer = $("[data-hangar-stats]");
+    const requestsContainer = $("[data-hangar-requests]");
+    const logsContainer = $("[data-hangar-logs]");
+
+    if (!statsContainer || !requestsContainer || !logsContainer || !window.fetch) {
+      return;
+    }
+
+    loadHangarIntel(statsContainer, logsContainer)
       .catch(function () {
         statsContainer.innerHTML =
           '<div class="mission-empty">Panoul SQLite devine activ dupa pornirea serverului local cu <code>node server.js</code>.</div>';
-        requestsContainer.innerHTML = '<div class="mission-empty">Conexiunea la API nu este disponibila.</div>';
         logsContainer.innerHTML = '<div class="mission-empty">Jurnalul local nu a putut fi incarcat.</div>';
       });
+
+    loadHangarRequests(requestsContainer).catch(function () {
+      requestsContainer.innerHTML = '<div class="mission-empty">Conexiunea la API nu este disponibila.</div>';
+    });
   }
 
   function initRevealAnimations() {
@@ -1156,6 +1434,7 @@
 
   window.SkyNetSite = {
     initNav: initNav,
+    initAuthUi: initAuthUi,
     initCart: initCart,
     initQuickView: initQuickView,
     initTabs: initTabs,
@@ -1169,5 +1448,13 @@
     initStockSlider: initStockSlider,
     initGlobalEscapes: initGlobalEscapes,
     syncBodyLock: syncBodyLock,
+    resolveApiUrl: resolveApiUrl,
+    syncAuthSession: syncAuthSession,
+    getAuthHeaders: getAuthHeaders,
+    getAuthState: getAuthState,
+    setAuthSession: setAuthSession,
+    clearAuthSession: clearAuthSession,
   };
+
+  initAuthUi();
 })();

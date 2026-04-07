@@ -268,7 +268,7 @@ select {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
 }
 
@@ -322,6 +322,11 @@ select {
 
 .admin-panel__head h2 {
   margin-bottom: 0;
+}
+
+.admin-panel__intro {
+  margin: 0 0 18px;
+  color: var(--muted);
 }
 
 .admin-counter {
@@ -482,6 +487,91 @@ select {
   color: var(--muted);
 }
 
+.database-tables {
+  display: grid;
+  gap: 18px;
+}
+
+.db-table-card {
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+}
+
+.db-table-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.db-table-card__title {
+  margin: 0;
+  font-size: 1.18rem;
+}
+
+.db-table-card__columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.column-pill {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(20, 107, 115, 0.08);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.column-pill small {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.db-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+}
+
+.db-table th,
+.db-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.db-table th {
+  color: #8a6240;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.db-table td {
+  color: var(--muted);
+}
+
+.table-null {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(113, 93, 75, 0.1);
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
 .nav-toggle {
   display: none;
   width: 46px;
@@ -564,7 +654,8 @@ select {
 
   .admin-panel__head,
   .fleet-card__top,
-  .log-card__top {
+  .log-card__top,
+  .db-table-card__head {
     flex-direction: column;
     align-items: flex-start;
   }
